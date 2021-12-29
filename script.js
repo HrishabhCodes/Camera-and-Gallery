@@ -5,6 +5,8 @@ const captureBtnCont = document.querySelector(".capture-btn-cont");
 const recordBtn = document.querySelector(".record-btn");
 const captureBtn = document.querySelector(".capture-btn");
 let recordFlag = false;
+let classAvailable = false;
+let transparentColor = "transparent";
 let chunks = []; // media data chunks
 
 let constraints = {
@@ -89,3 +91,41 @@ const stopTimer = () => {
   timer.innerText = "00:00:00";
   timerCont.style.display = "none";
 };
+
+// *********************** Capturing images ***********************
+
+captureBtnCont.addEventListener("click", (e) => {
+  captureBtn.classList.add("scale-capture");
+
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  const tool = canvas.getContext("2d");
+  tool.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  tool.fillStyle = transparentColor;
+  tool.fillRect(0, 0, canvas.width, canvas.height);
+
+  const imageURL = canvas.toDataURL();
+  const a = document.createElement("a");
+  a.href = imageURL;
+  a.download = "image.jpg";
+  a.click();
+
+  setTimeout(() => {
+    captureBtn.classList.remove("scale-capture");
+  }, 500);
+});
+
+// *********************** Filtering images ***********************
+
+const filterLayer = document.querySelector(".filter-layer");
+const allFilters = document.querySelectorAll(".filter");
+allFilters.forEach((filterElem) => {
+  filterElem.addEventListener("click", (e) => {
+    transparentColor =
+      getComputedStyle(filterElem).getPropertyValue("background-color");
+    filterLayer.style.backgroundColor = transparentColor;
+  });
+});

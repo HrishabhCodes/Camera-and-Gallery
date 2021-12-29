@@ -5,12 +5,13 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: black;
+  background-color: rgb(24, 24, 24);
 }
 
 /********** Stream **********/
 
 .video-cont {
+  z-index: -1;
   height: 100vh;
   width: 100vw;
 }
@@ -23,6 +24,7 @@ video {
 /********** Recording and Capturing **********/
 
 .action-cont {
+  z-index: 1;
   position: absolute;
   /* background-color: lightblue; */
   height: 16rem;
@@ -92,7 +94,7 @@ video {
     transform: scale(0.8);
   }
   100% {
-    transform: scale(1.1);
+    transform: scale(1);
   }
 }
 
@@ -119,4 +121,47 @@ video {
   background-color: rgb(255, 35, 27);
   border-radius: 50%;
   margin-right: 0.5rem;
+}
+
+.filter-cont {
+  z-index: 1;
+  position: absolute;
+  top: calc((100vh - 33rem) / 2);
+  left: 4rem;
+  height: 31rem;
+  width: 11rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.filter {
+  height: 6.8rem;
+  background-image: url("./img.jpeg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+  background-blend-mode: color-burn;
+}
+
+.orange {
+  background-color: rgba(175, 118, 68, 0.432);
+}
+
+.pink {
+  background-color: rgba(216, 108, 218, 0.377);
+}
+
+.red {
+  background-color: rgba(187, 73, 73, 0.384);
+}
+
+.filter-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-blend-mode: color-burn;
+  z-index: 0;
 }
