@@ -29,11 +29,23 @@ navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
   recorder.addEventListener("stop", (e) => {
     // convert media chunks data to video
     let blob = new Blob(chunks, { type: "video/mp4" });
-    let videoURL = URL.createObjectURL(blob);
-    let a = document.createElement("a");
-    a.href = videoURL;
-    a.download = "recording.mp4";
-    a.click();
+
+    if (db) {
+      let videoId = shortid();
+      let dbTransaction = db.transaction("video", "readwrite");
+      let videoStore = dbTransaction.objectStore("video");
+      let videoEntry = {
+        id: `vid-${videoId}`,
+        blobData: blob,
+      };
+      videoStore.add(videoEntry);
+    }
+
+    // let videoURL = URL.createObjectURL(blob);
+    // let a = document.createElement("a");
+    // a.href = videoURL;
+    // a.download = "recording.mp4";
+    // a.click();
   });
 });
 
@@ -60,8 +72,9 @@ recordBtnCont.addEventListener("click", (e) => {
 const timerCont = document.querySelector(".timer-cont");
 const timer = document.querySelector(".timer");
 const timerDot = document.querySelector(".dot");
-let counter = 1;
 const startTimer = () => {
+  let counter = 1;
+
   timerCont.style.display = "flex";
   const displayTimer = () => {
     let totalSeconds = counter;
@@ -108,10 +121,22 @@ captureBtnCont.addEventListener("click", (e) => {
   tool.fillRect(0, 0, canvas.width, canvas.height);
 
   const imageURL = canvas.toDataURL();
-  const a = document.createElement("a");
-  a.href = imageURL;
-  a.download = "image.jpg";
-  a.click();
+
+  if (db) {
+    let imageId = shortid();
+    let dbTransaction = db.transaction("image", "readwrite");
+    let imageStore = dbTransaction.objectStore("image");
+    let imageEntry = {
+      id: `img-${imageId}`,
+      url: imageURL,
+    };
+    imageStore.add(imageEntry);
+  }
+
+  // const a = document.createElement("a");
+  // a.href = imageURL;
+  // a.download = "image.jpg";
+  // a.click();
 
   setTimeout(() => {
     captureBtn.classList.remove("scale-capture");
